@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use chrono::{NaiveDate, Duration};
+use serde::Serialize;
 use stocks_core::types::*;
 use stocks_core::util::*;
 use stocks_core::stats::*;
@@ -25,6 +26,7 @@ pub struct Investment {
     pub quantity: f32
 }
 
+#[derive(Serialize)]
 pub struct Trade {
     pub symbol: String,
     pub price: f32,

@@ -1,4 +1,4 @@
-use std::fs::read_to_string;
+use std::fs::{write, read_to_string};
 use stocks_core::types::*;
 use stocks_core::util::*;
 use super::simulator::Trade;
@@ -46,6 +46,7 @@ fn get_stock_history(stock: &Stock) -> Vec<Candle> {
     return history;
 }
 
-pub fn save_trades(trades: Vec<Trade>) {
-    
+pub fn save_trades(trades: &Vec<Trade>) {
+    let json_contents = serde_json::to_string_pretty(trades).unwrap();
+    write("assets/trades.json", json_contents).unwrap();
 }

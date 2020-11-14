@@ -3,7 +3,7 @@ mod simulator;
 
 use stocks_core::stats::*;
 use stocks_core::util::parse_date;
-use data::get_all_stocks;
+use data::{get_all_stocks,save_trades};
 use simulator::*;
 
 fn main() {
@@ -39,4 +39,6 @@ fn main() {
     println!("Total returns: {}%", total_returns);
     println!("Annual returns: {}%", annual_returns);
     println!("{} trades made", result.trades.len());
+
+    save_trades(&result.trades);
 }
