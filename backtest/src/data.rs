@@ -1,7 +1,7 @@
-use std::fs::{write, read_to_string};
+use super::simulator::Trade;
+use std::fs::{read_to_string, write};
 use stocks_core::types::*;
 use stocks_core::util::*;
-use super::simulator::Trade;
 
 pub fn get_all_stocks() -> Vec<Stock> {
     let json = read_to_string("assets/stocks.json").unwrap();

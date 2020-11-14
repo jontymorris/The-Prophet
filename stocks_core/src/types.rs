@@ -20,7 +20,7 @@ pub struct Candle {
     #[serde(rename = "Close")]
     pub close: f32,
     #[serde(rename = "Volume")]
-    pub volume: f32
+    pub volume: f32,
 }
 
 pub struct Bound {
@@ -32,5 +32,5 @@ pub struct Bound {
 pub struct Close {
     pub value: f32,
     pub percent_change: f32,
-    pub date: String
+    pub date: String,
 }

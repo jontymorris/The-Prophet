@@ -1,14 +1,14 @@
 mod data;
 mod simulator;
 
+use data::{get_all_stocks, save_trades};
+use simulator::*;
 use stocks_core::stats::*;
 use stocks_core::util::parse_date;
-use data::{get_all_stocks,save_trades};
-use simulator::*;
 
 fn main() {
     let step_size = 3;
-    
+
     println!("Loading stocks...");
     let stocks = get_all_stocks();
 

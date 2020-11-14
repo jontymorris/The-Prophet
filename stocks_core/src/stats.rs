@@ -1,6 +1,6 @@
+use super::types::*;
 use std::collections::HashMap;
 use std::iter::Sum;
-use super::types::*;
 
 pub fn get_all_bounds(changes: &HashMap<String, Vec<f32>>) -> HashMap<String, Bound> {
     let mut bounds = HashMap::with_capacity(changes.len());
@@ -33,15 +33,15 @@ pub fn get_average_changes(stock: &Stock, step_by: usize) -> Vec<f32> {
     for i in 1..stock.history.len() {
         // calculate today's change
         let today = stock.history[i].close;
-        let yesterday = stock.history[i-1].close;
+        let yesterday = stock.history[i - 1].close;
         let change = get_change(today, yesterday);
-        
+
         step_changes.push(change);
 
         // if at end of period, calculate the average
         if step_changes.len() >= step_by || i == step_changes.len() - 1 {
             let period_mean = get_mean(&step_changes);
-            
+
             average_changes.push(period_mean);
             step_changes.clear();
         }
@@ -68,7 +68,7 @@ pub fn get_bounds(values: &Vec<f32>) -> Bound {
     return Bound {
         upper: mean + interval,
         lower: mean - interval,
-        middle: mean
+        middle: mean,
     };
 }
 

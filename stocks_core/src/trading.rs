@@ -1,5 +1,5 @@
-use super::types::*;
 use super::stats::*;
+use super::types::*;
 
 pub fn should_sell(latest_close: &Close, stock_bound: &Bound, bought_price: f32) -> bool {
     let current_margin = get_change(latest_close.value, bought_price);
