@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Backtest Debug",
+            "program": "${workspaceRoot}/backtest/target/debug/backtest",
+            "args": [],
+            "cwd": "${workspaceRoot}/backtest",
+            "sourceLanguages": ["rust"]
+        }
+    ]
+}
