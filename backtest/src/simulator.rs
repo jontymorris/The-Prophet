@@ -1,6 +1,7 @@
+use std::collections::HashMap;
 use chrono::{Duration, NaiveDate};
 use serde::Serialize;
-use std::collections::HashMap;
+use indicatif::ProgressBar;
 use stocks_core::stats::*;
 use stocks_core::trading::*;
 use stocks_core::types::*;
@@ -49,6 +50,9 @@ pub fn perform_simulation(
     let today = get_today();
     let interval = Duration::days(1);
 
+    let days = (config.end_date - config.start_date).num_days();
+    let progress = ProgressBar::new(days as u64);
+
     // keep looping until past end-date
     while !is_past_date(trading_date, config.end_date) {
         // check the stocks each day
@@ -64,6 +68,7 @@ pub fn perform_simulation(
         }
 
         trading_date += interval;
+        progress.inc(1);
     }
 
     // now sell the remaining investments
@@ -83,6 +88,8 @@ pub fn perform_simulation(
 
         trading_date += interval;
     }
+
+    progress.finish();
 
     return portfolio;
 }
@@ -127,7 +134,6 @@ fn analyze_buying(
         }
 
         let quantity = (buy_amount * 0.995) / closing.value;
-        println!("> Buying {} at ${}", stock.symbol, closing.value);
 
         let new_investment = Investment {
             price: closing.value,
@@ -153,7 +159,6 @@ fn analyze_selling(stock: &Stock, bound: &Bound, closing: Close, portfolio: &mut
     let investment = &portfolio.investments[&stock.symbol];
 
     if should_sell(&closing, bound, investment.price) {
-        println!("> Selling {} at ${}", stock.symbol, closing.value);
         let new_amount = closing.value * investment.quantity;
 
         let new_trade = Trade {
