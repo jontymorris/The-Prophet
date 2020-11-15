@@ -126,7 +126,7 @@ fn analyze_buying(
             return;
         }
 
-        let quantity = buy_amount / closing.value;
+        let quantity = (buy_amount * 0.995) / closing.value;
         println!("> Buying {} at ${}", stock.symbol, closing.value);
 
         let new_investment = Investment {
@@ -164,7 +164,7 @@ fn analyze_selling(stock: &Stock, bound: &Bound, closing: Close, portfolio: &mut
         };
 
         portfolio.trades.push(new_trade);
-        portfolio.balance += new_amount;
+        portfolio.balance += new_amount * 0.995;
         portfolio.investments.remove_entry(&stock.symbol).unwrap();
     }
 }
