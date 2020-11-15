@@ -10,7 +10,7 @@ fn main() {
     let step_size = 3;
 
     println!("Loading stocks...");
-    let stocks = get_all_stocks();
+    let stocks = get_all_stocks("us".into());
 
     println!("Averaging changes...");
     let changes = get_all_average_changes(&stocks, step_size);
@@ -23,8 +23,8 @@ fn main() {
         buy_amount: 100.0,
         sell_loss_percent: 5.0,
         step_size: step_size,
-        start_date: parse_date("2018-01-01".to_string()),
-        end_date: parse_date("2020-01-01".to_string()),
+        start_date: parse_date("2018-09-01".to_string()),
+        end_date: parse_date("2020-11-15".to_string()),
     };
 
     println!("Performing simulation...");

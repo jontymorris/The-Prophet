@@ -3,8 +3,9 @@ use std::fs::{read_to_string, write};
 use stocks_core::types::*;
 use stocks_core::util::*;
 
-pub fn get_all_stocks() -> Vec<Stock> {
-    let json = read_to_string("assets/stocks.json").unwrap();
+pub fn get_all_stocks(market: String) -> Vec<Stock> {
+    let path = format!("assets/stocks_{}.json", market);
+    let json = read_to_string(path).unwrap();
 
     // load the stock listings from json
     let result = serde_json::from_str(json.as_str());
@@ -23,7 +24,12 @@ fn get_stock_history(stock: &Stock) -> Vec<Candle> {
     // read the CSV contents
     let symbol = stock.symbol.to_ascii_uppercase();
     let path = format!("assets/history/{}.csv", symbol);
-    let contents = read_to_string(path).unwrap();
+
+    let contents: String;
+    match read_to_string(path) {
+        Ok(result) => contents = result,
+        Err(_) => return vec![]
+    }
 
     let mut reader = csv::ReaderBuilder::new()
         .delimiter(b',')
@@ -34,7 +40,12 @@ fn get_stock_history(stock: &Stock) -> Vec<Candle> {
 
     // now parse each CSV record
     for result in reader.deserialize() {
-        let candle: Candle = result.unwrap();
+        let candle: Candle;
+        match result {
+            Ok(value) => candle = value,
+            Err(_) => continue
+        }
+
         let date = parse_date(candle.date.clone());
 
         // ensure it is past the listing date
