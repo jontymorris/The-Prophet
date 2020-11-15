@@ -8,21 +8,23 @@ from time import sleep
 
 
 BASE = '../backtest/assets/'
-MARKET = 'us'
 
 def get_symbols():
-    with open(BASE + f'stocks_{MARKET}.json') as handle:
-        contents = handle.read()
-        stocks = json.loads(contents)
+    stocks = []
 
-        return [stock['symbol'] for stock in stocks]
+    for market in ['nz', 'us']:
+        with open(BASE + f'stocks_{market}.json') as handle:
+            contents = handle.read()
+            stocks += json.loads(contents)
+
+    return [stock['symbol'] for stock in stocks]
 
 def get_history(symbol):
     path = BASE + f'history/{symbol.upper()}.csv'
 
     history = pandas.read_csv(path)
     history['Date'] = pandas.to_datetime(history['Date'])
-    history = history[history['Date'] >= '2018-01-01']
+    #history = history[history['Date'] >= '2018-01-01']
 
     return history
 
