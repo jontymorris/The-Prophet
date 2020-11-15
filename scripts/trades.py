@@ -8,9 +8,10 @@ from time import sleep
 
 
 BASE = '../backtest/assets/'
+MARKET = 'us'
 
 def get_symbols():
-    with open(BASE + 'stocks.json') as handle:
+    with open(BASE + f'stocks_{MARKET}.json') as handle:
         contents = handle.read()
         stocks = json.loads(contents)
 
@@ -55,21 +56,24 @@ empty_output_folder()
 
 print('Generating images')
 for symbol in tqdm(symbols):
-    history = get_history(symbol)
-    buys = find_trades(symbol, True, trades)
-    sells = find_trades(symbol,False, trades)
+    try:
+        history = get_history(symbol)
+        buys = find_trades(symbol, True, trades)
+        sells = find_trades(symbol,False, trades)
 
-    if len(buys) == 0 and len(sells) == 0:
-        continue
+        if len(buys) == 0 and len(sells) == 0:
+            continue
 
-    fig = pyplot.gcf()
-    fig.set_size_inches(18.5, 10.5)
-    
-    pyplot.plot(history['Date'].values, history['Close'].values, label='Price/Time')
-    pyplot.plot_date([trade['date'] for trade in buys], [trade['price'] for trade in buys], label='Buys')
-    pyplot.plot_date([trade['date'] for trade in sells], [trade['price'] for trade in sells], label='Sells')
+        fig = pyplot.gcf()
+        fig.set_size_inches(18.5, 10.5)
+        
+        pyplot.plot(history['Date'].values, history['Close'].values, label='Price/Time')
+        pyplot.plot_date([trade['date'] for trade in buys], [trade['price'] for trade in buys], label='Buys')
+        pyplot.plot_date([trade['date'] for trade in sells], [trade['price'] for trade in sells], label='Sells')
 
-    pyplot.savefig(BASE + f'output/{symbol}.jpeg')
-    pyplot.show()
+        pyplot.savefig(BASE + f'output/{symbol}.jpeg')
+        pyplot.show()
+    except:
+        pass
 
 print('Done.')
