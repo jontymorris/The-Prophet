@@ -9,9 +9,11 @@ pub fn should_sell(latest_close: &Close, stock_bound: &Bound, bought_price: f32)
         return true;
     }
 
-    // sell if we're in a peak
+    // sell if we're in a profitable peak
     if latest_close.percent_change >= stock_bound.upper {
-        return true;
+        if current_margin > 0.5 {
+            return true;
+        }
     }
 
     return false;
@@ -24,12 +26,12 @@ pub fn should_buy(latest_close: &Close, stock_bound: &Bound) -> bool {
     }
 
     // ignore down-trending stocks
-    if stock_bound.middle <= 0.0 {
+    if stock_bound.middle <= 0.1 {
         return false;
     }
 
     // buy if we're in a dip
-    if latest_close.percent_change >= stock_bound.lower {
+    if latest_close.percent_change < stock_bound.lower {
         return true;
     }
 
