@@ -12,25 +12,13 @@ pub struct Candle {
     #[serde(rename = "Date")]
     pub date: String,
     #[serde(rename = "Open")]
-    pub open: f32,
+    pub open: f64,
     #[serde(rename = "High")]
-    pub high: f32,
+    pub high: f64,
     #[serde(rename = "Low")]
-    pub low: f32,
+    pub low: f64,
     #[serde(rename = "Close")]
-    pub close: f32,
+    pub close: f64,
     #[serde(rename = "Volume")]
-    pub volume: f32,
-}
-
-pub struct Bound {
-    pub upper: f32,
-    pub middle: f32,
-    pub lower: f32,
-}
-
-pub struct Close {
-    pub value: f32,
-    pub percent_change: f32,
-    pub date: String,
+    pub volume: f64,
 }

@@ -1,45 +1,41 @@
-use std::collections::HashMap;
 use chrono::{Duration, NaiveDate};
-use serde::Serialize;
 use indicatif::ProgressBar;
-use stocks_core::stats::*;
+use serde::Serialize;
+use std::collections::HashMap;
+use stocks_core::dates::*;
 use stocks_core::trading::*;
 use stocks_core::types::*;
-use stocks_core::util::*;
 
 pub struct Config {
-    pub balance: f32,
-    pub buy_amount: f32,
-    pub sell_loss_percent: f32,
+    pub balance: f64,
+    pub buy_amount: f64,
+    pub sell_loss_percent: f64,
+    pub sell_gain_percent: f64,
+    pub days_to_go_back: i64,
     pub start_date: NaiveDate,
     pub end_date: NaiveDate,
-    pub step_size: usize,
 }
 
 pub struct Portfolio {
-    pub balance: f32,
+    pub balance: f64,
     pub investments: HashMap<String, Investment>,
     pub trades: Vec<Trade>,
 }
 
 pub struct Investment {
-    pub price: f32,
-    pub quantity: f32,
+    pub price: f64,
+    pub quantity: f64,
 }
 
 #[derive(Serialize)]
 pub struct Trade {
     pub symbol: String,
-    pub price: f32,
+    pub price: f64,
     pub date: String,
     pub was_buying: bool,
 }
 
-pub fn perform_simulation(
-    stocks: Vec<Stock>,
-    bounds: HashMap<String, Bound>,
-    config: &Config,
-) -> Portfolio {
+pub fn perform_simulation(stocks: Vec<Stock>, config: &Config) -> Portfolio {
     let mut portfolio = Portfolio {
         balance: config.balance,
         investments: HashMap::new(),
@@ -57,14 +53,7 @@ pub fn perform_simulation(
     while !is_past_date(trading_date, config.end_date) {
         // check the stocks each day
         for stock in &stocks {
-            let bound: &Bound = &bounds[&stock.symbol];
-            check_stock(
-                stock,
-                bound,
-                trading_date,
-                &mut portfolio,
-                config.buy_amount,
-            );
+            check_stock(stock, trading_date, &mut portfolio, &config);
         }
 
         trading_date += interval;
@@ -75,14 +64,7 @@ pub fn perform_simulation(
     while !is_past_date(trading_date, today) && portfolio.investments.len() > 0 {
         for stock in &stocks {
             if portfolio.investments.contains_key(&stock.symbol) {
-                let bound: &Bound = &bounds[&stock.symbol];
-                check_stock(
-                    stock,
-                    bound,
-                    trading_date,
-                    &mut portfolio,
-                    config.buy_amount,
-                );
+                check_stock(stock, trading_date, &mut portfolio, &config);
             }
         }
 
@@ -94,55 +76,64 @@ pub fn perform_simulation(
     return portfolio;
 }
 
-fn check_stock(
-    stock: &Stock,
-    bound: &Bound,
-    current_date: NaiveDate,
-    portfolio: &mut Portfolio,
-    buy_amount: f32,
-) {
+fn check_stock(stock: &Stock, current_date: NaiveDate, portfolio: &mut Portfolio, config: &Config) {
     // skip pre-listed stocks
     if !has_been_listed_yet(stock, current_date) {
         return;
     }
 
     // check we have closing data for this day
-    let closing = get_latest_close(stock, current_date);
-    if closing.is_none() {
+    let recent_closes = get_recent_closes(stock, current_date, config.days_to_go_back);
+    if recent_closes.is_none() {
         return;
     }
 
     // analyze the buying and selling
     if portfolio.investments.contains_key(&stock.symbol) {
-        analyze_selling(stock, bound, closing.unwrap(), portfolio);
+        analyze_selling(
+            stock,
+            &recent_closes.unwrap(),
+            &current_date,
+            portfolio,
+            config,
+        );
     } else {
-        analyze_buying(stock, bound, closing.unwrap(), portfolio, buy_amount);
+        analyze_buying(
+            stock,
+            &recent_closes.unwrap(),
+            &current_date,
+            portfolio,
+            config,
+        );
     }
 }
 
 fn analyze_buying(
     stock: &Stock,
-    bound: &Bound,
-    closing: Close,
+    recent_closes: &Vec<f64>,
+    current_date: &NaiveDate,
     portfolio: &mut Portfolio,
-    buy_amount: f32,
+    config: &Config,
 ) {
-    if should_buy(&closing, bound) {
+    if should_buy(&recent_closes) {
+        let buy_amount = get_risk_factored_amount(config.buy_amount, recent_closes);
+        let last_close_price = *recent_closes.last().unwrap();
+
         // ignore if we don't have the budget
         if portfolio.balance < buy_amount {
             return;
         }
 
-        let quantity = (buy_amount * 0.995) / closing.value;
+        let quantity = (buy_amount * 0.995) / last_close_price;
 
         let new_investment = Investment {
-            price: closing.value,
+            price: last_close_price,
             quantity: quantity,
         };
 
         let new_trade = Trade {
-            price: closing.value,
-            date: closing.date.clone(),
+            price: last_close_price,
+            date: current_date.format("%Y-%m-%d").to_string(),
             symbol: stock.symbol.clone(),
             was_buying: true,
         };
@@ -155,16 +146,29 @@ fn analyze_buying(
     }
 }
 
-fn analyze_selling(stock: &Stock, bound: &Bound, closing: Close, portfolio: &mut Portfolio) {
+fn analyze_selling(
+    stock: &Stock,
+    recent_closes: &Vec<f64>,
+    current_date: &NaiveDate,
+    portfolio: &mut Portfolio,
+    config: &Config,
+) {
     let investment = &portfolio.investments[&stock.symbol];
+    let latest_close = *recent_closes.last().unwrap();
+    let date_format = current_date.format("%Y-%m-%d").to_string();
 
-    if should_sell(&closing, bound, investment.price) {
-        let new_amount = closing.value * investment.quantity;
+    if should_sell(
+        &recent_closes,
+        investment.price,
+        config.sell_loss_percent,
+        config.sell_gain_percent,
+    ) {
+        let new_amount = latest_close * investment.quantity;
 
         let new_trade = Trade {
-            price: closing.value,
+            price: latest_close,
             symbol: stock.symbol.clone(),
-            date: closing.date.clone(),
+            date: date_format,
             was_buying: false,
         };
 
@@ -172,30 +176,6 @@ fn analyze_selling(stock: &Stock, bound: &Bound, closing: Close, portfolio: &mut
         portfolio.balance += new_amount * 0.995;
         portfolio.investments.remove_entry(&stock.symbol).unwrap();
     }
-}
-
-fn get_latest_close(stock: &Stock, current_date: NaiveDate) -> Option<Close> {
-    let format = "%Y-%m-%d";
-    let date_value = current_date.format(format).to_string();
-
-    for (index, candle) in stock.history.iter().enumerate() {
-        if candle.date.eq(&date_value) {
-            // no change on first candle
-            if index == 0 {
-                return None;
-            }
-
-            let previous = &stock.history[index - 1];
-
-            return Some(Close {
-                value: candle.close,
-                percent_change: get_change(candle.close, previous.close),
-                date: candle.date.clone(),
-            });
-        }
-    }
-
-    return None;
 }
 
 fn has_been_listed_yet(stock: &Stock, current_date: NaiveDate) -> bool {

@@ -1,7 +1,7 @@
 use super::simulator::Trade;
 use std::fs::{read_to_string, write};
+use stocks_core::dates::*;
 use stocks_core::types::*;
-use stocks_core::util::*;
 
 pub fn get_all_stocks(market: String) -> Vec<Stock> {
     let path = format!("assets/stocks_{}.json", market);
@@ -28,7 +28,7 @@ fn get_stock_history(stock: &Stock) -> Vec<Candle> {
     let contents: String;
     match read_to_string(path) {
         Ok(result) => contents = result,
-        Err(_) => return vec![]
+        Err(_) => return vec![],
     }
 
     let mut reader = csv::ReaderBuilder::new()
@@ -43,7 +43,7 @@ fn get_stock_history(stock: &Stock) -> Vec<Candle> {
         let candle: Candle;
         match result {
             Ok(value) => candle = value,
-            Err(_) => continue
+            Err(_) => continue,
         }
 
         let date = parse_date(candle.date.clone());
