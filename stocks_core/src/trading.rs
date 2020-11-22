@@ -5,7 +5,7 @@ pub fn should_sell(closes: &Vec<f64>, buy_price: f64, sell_loss_percent: f64, se
     
     // auto sell if we have reached our margins
     let current_gains = get_percent_change(latest_price, buy_price);
-    if current_gains >= sell_gain_percent || current_gains <= -sell_gain_percent {
+    if current_gains >= sell_gain_percent || current_gains <= -sell_loss_percent {
         return true;
     }
     
@@ -65,7 +65,8 @@ pub fn should_buy(closes: &Vec<f64>) -> bool {
     let (gradient, r) = get_best_fit(&closes);
     if gradient > 0.025 && r > 0.85 {
         // todo: do we really want to limit the gradient?
-        // often an abnormal spike get's sold away...
+        // often an abnormal spike get's sold away quick...
+        // maybe this should be optimized for the target market
         if gradient < 0.035 {
             return true;
         }
