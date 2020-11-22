@@ -43,7 +43,7 @@ pub fn should_sell(closes: &Vec<f64>, buy_price: f64, sell_loss_percent: f64, se
     if latest_price <= *recent_low_value {
         // check we haven't found the peak
         if recent_low_index != latest_peak_index {
-            // also don't care about daily decreases
+            // also don't care if it was yeseterday
             if closes.len() - recent_low_index > 2 {
                 return true;
             }
