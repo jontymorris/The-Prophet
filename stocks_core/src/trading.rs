@@ -1,6 +1,11 @@
 use super::stats::*;
 
-pub fn should_sell(closes: &Vec<f64>, buy_price: f64, sell_loss_percent: f64, sell_gain_percent: f64,) -> bool {
+pub fn should_sell(
+    closes: &Vec<f64>,
+    buy_price: f64,
+    sell_loss_percent: f64,
+    sell_gain_percent: f64,
+) -> bool {
     let latest_price = *closes.last().unwrap();
     let current_gains = get_percent_change(latest_price, buy_price);
 
@@ -15,7 +20,7 @@ pub fn should_sell(closes: &Vec<f64>, buy_price: f64, sell_loss_percent: f64, se
     }
 
     // now wait till our profit maximises
-    return is_at_recent_low(&closes[closes.len()-10..].to_vec());
+    return is_at_recent_low(&closes[closes.len() - 10..].to_vec());
 }
 
 pub fn should_buy(closes: &Vec<f64>) -> bool {
@@ -33,12 +38,15 @@ pub fn should_buy(closes: &Vec<f64>) -> bool {
 
     let recent_days = 4;
     let length = closes.len();
+
     let (old_values, new_values) = closes.split_at(length - recent_days);
-    let (old_gradient, old_r) = get_best_fit(&old_values[old_values.len()-14..].to_vec());
+    let (old_gradient, old_r) = get_best_fit(&old_values[old_values.len() - 14..].to_vec());
     let (new_gradient, new_r) = get_best_fit(&new_values.to_vec());
 
     // no recent decreases
-    if new_values[recent_days-1] < new_values[recent_days-2] || new_values[recent_days-2] < new_values[recent_days-3] {
+    if new_values[recent_days - 1] < new_values[recent_days - 2]
+        || new_values[recent_days - 2] < new_values[recent_days - 3]
+    {
         return false;
     }
 

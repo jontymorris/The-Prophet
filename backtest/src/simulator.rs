@@ -202,7 +202,11 @@ fn has_been_listed_yet(stock: &Stock, current_date: NaiveDate) -> bool {
 }
 
 fn has_sold_recently(stock: &Stock, today: &NaiveDate, portfolio: &Portfolio) -> bool {
-    let trades: Vec<&Trade> = portfolio.trades.iter().filter(|&x| x.symbol.eq(&stock.symbol)).collect();
+    let trades: Vec<&Trade> = portfolio
+        .trades
+        .iter()
+        .filter(|&x| x.symbol.eq(&stock.symbol))
+        .collect();
 
     let last_trade = trades.last();
     if last_trade.is_some() {

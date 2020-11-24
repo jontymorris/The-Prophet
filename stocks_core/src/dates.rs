@@ -1,6 +1,6 @@
+use super::types::Stock;
 use chrono::offset::Local;
 use chrono::{Duration, NaiveDate};
-use super::types::Stock;
 
 pub fn parse_date(value: String) -> NaiveDate {
     let format = "%Y-%m-%d";
@@ -39,7 +39,7 @@ pub fn get_recent_closes(stock: &Stock, date: NaiveDate, days_to_go_back: i64) -
         // now add recent closes to vector and return
         let start_index = index - required_length;
         let mut recent_closes: Vec<f64> = Vec::with_capacity(days_to_go_back as usize);
-        for i in start_index..index+1 {
+        for i in start_index..index + 1 {
             recent_closes.push(stock.history[i].close);
         }
 

@@ -19,7 +19,7 @@ pub fn get_best_fit(values: &Vec<f64>) -> (f64, f64) {
 
 pub fn is_at_recent_low(values: &Vec<f64>) -> bool {
     let last_value = values.last().unwrap();
-    
+
     // find the latest peak
     let mut latest_peak_index = 0;
     let mut latest_peak_value = values.first().unwrap();
@@ -71,12 +71,12 @@ pub fn get_average_volatility(values: &Vec<f64>) -> f64 {
     for chunk in values.chunks(7) {
         let mut current_high = 0.0;
         let mut current_low = 0.0;
-        
+
         for value in chunk {
             if *value > current_high {
                 current_high = *value;
             }
-    
+
             if *value < current_low {
                 current_low = *value;
             }
