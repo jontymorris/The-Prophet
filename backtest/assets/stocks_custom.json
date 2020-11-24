@@ -1,17 +1,607 @@
 [
     {
+        "symbol": "scy.nz",
+        "listing_date": "2003-11-14",
+        "history": []
+    },
+    {
+        "symbol": "jlg.nz",
+        "listing_date": "2004-07-15",
+        "history": []
+    },
+    {
+        "symbol": "alf.nz",
+        "listing_date": "2002-05-09",
+        "history": []
+    },
+    {
+        "symbol": "blt.nz",
+        "listing_date": "2001-07-30",
+        "history": []
+    },
+    {
+        "symbol": "oca.nz",
+        "listing_date": "2017-05-05",
+        "history": []
+    },
+    {
+        "symbol": "hgh.nz",
+        "listing_date": "2011-02-01",
+        "history": []
+    },
+    {
+        "symbol": "aft.nz",
+        "listing_date": "2015-12-22",
+        "history": []
+    },
+    {
+        "symbol": "sct.nz",
+        "listing_date": "1997-07-21",
+        "history": []
+    },
+    {
+        "symbol": "mck.nz",
+        "listing_date": "1985-08-09",
+        "history": []
+    },
+    {
+        "symbol": "afi.nz",
+        "listing_date": "1996-08-05",
+        "history": []
+    },
+    {
+        "symbol": "mee.nz",
+        "listing_date": "2020-06-04",
+        "history": []
+    },
+    {
+        "symbol": "wdt.nz",
+        "listing_date": "2001-02-28",
+        "history": []
+    },
+    {
+        "symbol": "twr.nz",
+        "listing_date": "1999-09-28",
+        "history": []
+    },
+    {
+        "symbol": "vtl.nz",
+        "listing_date": "2004-05-06",
+        "history": []
+    },
+    {
+        "symbol": "nwf.nz",
+        "listing_date": "2005-12-13",
+        "history": []
+    },
+    {
+        "symbol": "pfi.nz",
+        "listing_date": "1994-12-12",
+        "history": []
+    },
+    {
+        "symbol": "pct.nz",
+        "listing_date": "1997-12-18",
+        "history": []
+    },
+    {
+        "symbol": "cgf.nz",
+        "listing_date": "2019-10-03",
+        "history": []
+    },
+    {
+        "symbol": "pph.nz",
+        "listing_date": "2017-08-14",
+        "history": []
+    },
+    {
+        "symbol": "san.nz",
+        "listing_date": "1924-12-08",
+        "history": []
+    },
+    {
+        "symbol": "mln.nz",
+        "listing_date": "2007-11-01",
+        "history": []
+    },
+    {
+        "symbol": "spn.nz",
+        "listing_date": "1994-07-08",
+        "history": []
+    },
+    {
+        "symbol": "skl.nz",
+        "listing_date": "2002-06-19",
+        "history": []
+    },
+    {
+        "symbol": "crp.nz",
+        "listing_date": "2019-10-03",
+        "history": []
+    },
+    {
+        "symbol": "air.nz",
+        "listing_date": "1989-10-24",
+        "history": []
+    },
+    {
+        "symbol": "cav.nz",
+        "listing_date": "1984-07-27",
+        "history": []
+    },
+    {
+        "symbol": "ntl.nz",
+        "listing_date": "1986-09-12",
+        "history": []
+    },
+    {
+        "symbol": "atm.nz",
+        "listing_date": "2004-04-20",
+        "history": []
+    },
+    {
+        "symbol": "tgg.nz",
+        "listing_date": "2004-09-29",
+        "history": []
+    },
+    {
+        "symbol": "ike.nz",
+        "listing_date": "2014-07-23",
+        "history": []
+    },
+    {
+        "symbol": "nzm.nz",
+        "listing_date": "2016-06-27",
+        "history": []
+    },
+    {
+        "symbol": "sdl.nz",
+        "listing_date": "2004-07-27",
+        "history": []
+    },
+    {
+        "symbol": "gxh.nz",
+        "listing_date": "2000-03-29",
+        "history": []
+    },
+    {
+        "symbol": "gtk.nz",
+        "listing_date": "2014-06-25",
+        "history": []
+    },
+    {
+        "symbol": "spy.nz",
+        "listing_date": "1987-03-12",
+        "history": []
+    },
+    {
+        "symbol": "tll.nz",
+        "listing_date": "2000-04-20",
+        "history": []
+    },
+    {
+        "symbol": "arb.nz",
+        "listing_date": "2001-03-26",
+        "history": []
+    },
+    {
+        "symbol": "anz.nz",
+        "listing_date": "1988-02-12",
+        "history": []
+    },
+    {
+        "symbol": "vct.nz",
+        "listing_date": "2002-11-05",
+        "history": []
+    },
+    {
+        "symbol": "nzx-rua.nz",
+        "listing_date": "2020-10-15",
+        "history": []
+    },
+    {
+        "symbol": "arg.nz",
+        "listing_date": "2002-12-04",
+        "history": []
+    },
+    {
+        "symbol": "bgi.nz",
+        "listing_date": "2004-10-06",
+        "history": []
+    },
+    {
+        "symbol": "peb.nz",
+        "listing_date": "2003-02-07",
+        "history": []
+    },
+    {
+        "symbol": "plx.nz",
+        "listing_date": "1985-01-01",
+        "history": []
+    },
+    {
+        "symbol": "erd.nz",
+        "listing_date": "2014-08-15",
+        "history": []
+    },
+    {
+        "symbol": "cdi.nz",
+        "listing_date": "1986-01-01",
+        "history": []
+    },
+    {
+        "symbol": "cen.nz",
+        "listing_date": "1999-05-11",
+        "history": []
+    },
+    {
+        "symbol": "nzk.nz",
+        "listing_date": "2016-10-19",
+        "history": []
+    },
+    {
+        "symbol": "vhp.nz",
+        "listing_date": "1999-09-07",
+        "history": []
+    },
+    {
+        "symbol": "skt.nz",
+        "listing_date": "2005-06-28",
+        "history": []
+    },
+    {
+        "symbol": "ipl.nz",
+        "listing_date": "2016-07-12",
+        "history": []
+    },
+    {
         "symbol": "ebo.nz",
         "listing_date": "1960-12-01",
         "history": []
     },
     {
+        "symbol": "sko.nz",
+        "listing_date": "2014-06-24",
+        "history": []
+    },
+    {
         "symbol": "spk.nz",
-        "listing_date": "2015-01-01",
+        "listing_date": "1991-07-18",
+        "history": []
+    },
+    {
+        "symbol": "fph.nz",
+        "listing_date": "1979-11-01",
+        "history": []
+    },
+    {
+        "symbol": "kpg.nz",
+        "listing_date": "2014-12-22",
+        "history": []
+    },
+    {
+        "symbol": "mcy.nz",
+        "listing_date": "2013-05-10",
+        "history": []
+    },
+    {
+        "symbol": "brm.nz",
+        "listing_date": "2006-10-26",
+        "history": []
+    },
+    {
+        "symbol": "stu.nz",
+        "listing_date": "1967-09-26",
+        "history": []
+    },
+    {
+        "symbol": "mel.nz",
+        "listing_date": "2010-03-01",
+        "history": []
+    },
+    {
+        "symbol": "mpg.nz",
+        "listing_date": "2014-07-30",
+        "history": []
+    },
+    {
+        "symbol": "rym.nz",
+        "listing_date": "1999-06-29",
+        "history": []
+    },
+    {
+        "symbol": "fre.nz",
+        "listing_date": "2003-09-29",
+        "history": []
+    },
+    {
+        "symbol": "aia.nz",
+        "listing_date": "1998-07-28",
+        "history": []
+    },
+    {
+        "symbol": "sml.nz",
+        "listing_date": "2013-07-23",
+        "history": []
+    },
+    {
+        "symbol": "tru.nz",
+        "listing_date": "2014-11-12",
+        "history": []
+    },
+    {
+        "symbol": "gmt.nz",
+        "listing_date": "1999-06-03",
         "history": []
     },
     {
         "symbol": "tpw.nz",
-        "listing_date": "2015-01-01",
+        "listing_date": "1994-04-18",
+        "history": []
+    },
+    {
+        "symbol": "sum.nz",
+        "listing_date": "2011-11-01",
+        "history": []
+    },
+    {
+        "symbol": "arv.nz",
+        "listing_date": "2014-12-18",
+        "history": []
+    },
+    {
+        "symbol": "cnu.nz",
+        "listing_date": "2011-11-23",
+        "history": []
+    },
+    {
+        "symbol": "pot.nz",
+        "listing_date": "1992-05-05",
+        "history": []
+    },
+    {
+        "symbol": "mft.nz",
+        "listing_date": "1996-06-14",
+        "history": []
+    },
+    {
+        "symbol": "hfl.nz",
+        "listing_date": "2006-12-19",
+        "history": []
+    },
+    {
+        "symbol": "gne.nz",
+        "listing_date": "2008-12-24",
+        "history": []
+    },
+    {
+        "symbol": "fbu.nz",
+        "listing_date": "2001-03-26",
+        "history": []
+    },
+    {
+        "symbol": "nph.nz",
+        "listing_date": "2019-08-19",
+        "history": []
+    },
+    {
+        "symbol": "jpg.nz",
+        "listing_date": "1994-10-03",
+        "history": []
+    },
+    {
+        "symbol": "hlg.nz",
+        "listing_date": "1947-10-01",
+        "history": []
+    },
+    {
+        "symbol": "ift.nz",
+        "listing_date": "1994-03-28",
+        "history": []
+    },
+    {
+        "symbol": "kfl.nz",
+        "listing_date": "2004-03-31",
+        "history": []
+    },
+    {
+        "symbol": "spg.nz",
+        "listing_date": "2016-07-12",
+        "history": []
+    },
+    {
+        "symbol": "cmo.nz",
+        "listing_date": "1962-05-01",
+        "history": []
+    },
+    {
+        "symbol": "mwe.nz",
+        "listing_date": "2016-06-30",
+        "history": []
+    },
+    {
+        "symbol": "tem.nz",
+        "listing_date": "1994-05-12",
+        "history": []
+    },
+    {
+        "symbol": "gsh.nz",
+        "listing_date": "2004-06-08",
+        "history": []
+    },
+    {
+        "symbol": "gen.nz",
+        "listing_date": "2019-10-03",
+        "history": []
+    },
+    {
+        "symbol": "geo.nz",
+        "listing_date": "2013-10-31",
+        "history": []
+    },
+    {
+        "symbol": "fwl.nz",
+        "listing_date": "2003-11-14",
+        "history": []
+    },
+    {
+        "symbol": "fct.nz",
+        "listing_date": "1993-07-06",
+        "history": []
+    },
+    {
+        "symbol": "pgw.nz",
+        "listing_date": "1982-01-01",
+        "history": []
+    },
+    {
+        "symbol": "apl.nz",
+        "listing_date": "1995-09-04",
+        "history": []
+    },
+    {
+        "symbol": "scl.nz",
+        "listing_date": "2014-07-25",
+        "history": []
+    },
+    {
+        "symbol": "tlt.nz",
+        "listing_date": "2016-10-28",
+        "history": []
+    },
+    {
+        "symbol": "cvt.nz",
+        "listing_date": "2003-11-14",
+        "history": []
+    },
+    {
+        "symbol": "nzo.nz",
+        "listing_date": "1981-09-28",
+        "history": []
+    },
+    {
+        "symbol": "qex.nz",
+        "listing_date": "2018-02-15",
+        "history": []
+    },
+    {
+        "symbol": "bfg.nz",
+        "listing_date": "2019-10-03",
+        "history": []
+    },
+    {
+        "symbol": "moa.nz",
+        "listing_date": "2012-11-13",
+        "history": []
+    },
+    {
+        "symbol": "mgl.nz",
+        "listing_date": "1959-10-01",
+        "history": []
+    },
+    {
+        "symbol": "pys.nz",
+        "listing_date": "2011-10-19",
+        "history": []
+    },
+    {
+        "symbol": "dgl.nz",
+        "listing_date": "2004-07-28",
+        "history": []
+    },
+    {
+        "symbol": "thl.nz",
+        "listing_date": "1986-06-03",
+        "history": []
+    },
+    {
+        "symbol": "evo.nz",
+        "listing_date": "2014-12-05",
+        "history": []
+    },
+    {
+        "symbol": "ens.nz",
+        "listing_date": "2014-12-01",
+        "history": []
+    },
+    {
+        "symbol": "kmd.nz",
+        "listing_date": "2009-11-12",
+        "history": []
+    },
+    {
+        "symbol": "nzr.nz",
+        "listing_date": "1962-09-01",
+        "history": []
+    },
+    {
+        "symbol": "bgp.nz",
+        "listing_date": "2001-12-14",
+        "history": []
+    },
+    {
+        "symbol": "vgl.nz",
+        "listing_date": "2014-08-11",
+        "history": []
+    },
+    {
+        "symbol": "rbd.nz",
+        "listing_date": "1997-06-04",
+        "history": []
+    },
+    {
+        "symbol": "rak.nz",
+        "listing_date": "2006-05-16",
+        "history": []
+    },
+    {
+        "symbol": "cbd.nz",
+        "listing_date": "2019-06-19",
+        "history": []
+    },
+    {
+        "symbol": "mhj.nz",
+        "listing_date": "2016-07-07",
+        "history": []
+    },
+    {
+        "symbol": "bit.nz",
+        "listing_date": "1995-02-20",
+        "history": []
+    },
+    {
+        "symbol": "gfl.nz",
+        "listing_date": "2008-07-01",
+        "history": []
+    },
+    {
+        "symbol": "mmh.nz",
+        "listing_date": "1992-10-05",
+        "history": []
+    },
+    {
+        "symbol": "plp.nz",
+        "listing_date": "2019-09-18",
+        "history": []
+    },
+    {
+        "symbol": "nzx.nz",
+        "listing_date": "2003-06-03",
+        "history": []
+    },
+    {
+        "symbol": "srf.nz",
+        "listing_date": "2015-12-03",
+        "history": []
+    },
+    {
+        "symbol": "wbc.nz",
+        "listing_date": "1992-05-18",
+        "history": []
+    },
+    {
+        "symbol": "whs.nz",
+        "listing_date": "1994-11-14",
         "history": []
     }
 ]
