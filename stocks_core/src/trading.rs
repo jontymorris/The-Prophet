@@ -42,9 +42,9 @@ pub fn should_buy(closes: &Vec<f64>) -> bool {
         return false;
     }
 
-    // old change isn't too great
-    let old_change = get_percent_change(*new_values.last().unwrap(), *old_values.last().unwrap());
-    if old_change.abs() >= 1.0 {
+    // difference isn't too great
+    let difference = get_percent_change(*new_values.last().unwrap(), *old_values.last().unwrap());
+    if difference.abs() >= 1.0 {
         return false;
     }
 
@@ -63,7 +63,7 @@ pub fn should_buy(closes: &Vec<f64>) -> bool {
         return false;
     }
 
-    return true;
+    return true; // looks good to me!
 }
 
 pub fn get_risk_factored_amount(max_amount: f64, closes: &Vec<f64>) -> f64 {
