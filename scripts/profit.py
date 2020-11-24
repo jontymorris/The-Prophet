@@ -22,9 +22,6 @@ def get_trades_by_symbol(trades):
     
     return symbols
 
-def get_change(value1, value2):
-    return (value1 - value2) / value2 * 100
-
 def get_daily_profit(symbol_trades):
     daily_profit = {}
 
@@ -34,9 +31,14 @@ def get_daily_profit(symbol_trades):
             if i > len(trades) - 2:
                 break
 
-            bought = trades[i]['price']
-            sold = trades[i+1]['price']
-            profit = get_change(sold, bought)
+            buy_price = trades[i]['price']
+            sell_price = trades[i+1]['price']
+            quantity = trades[i]['quantity']
+
+            bought = buy_price * quantity
+            sold = sell_price * quantity 
+
+            profit = sold - bought
 
             date = trades[i+1]['date']
             date = datetime.strptime(date, '%Y-%m-%d')
@@ -60,5 +62,5 @@ profits = [daily_profit[date] for date in dates]
 fig = pyplot.gcf()
 fig.set_size_inches(18.5, 10.5)
 
-pyplot.plot(dates, profits)
+pyplot.plot_date(dates, profits)
 pyplot.show()
