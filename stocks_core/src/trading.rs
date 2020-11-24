@@ -1,83 +1,79 @@
-use super::stats::{get_best_fit,get_percent_change};
+use super::stats::*;
 
 pub fn should_sell(closes: &Vec<f64>, buy_price: f64, sell_loss_percent: f64, sell_gain_percent: f64,) -> bool {
     let latest_price = *closes.last().unwrap();
-    
-    // auto sell if we have reached our margins
     let current_gains = get_percent_change(latest_price, buy_price);
-    if current_gains >= sell_gain_percent || current_gains <= -sell_loss_percent {
+
+    // sell if we've reached the loss margin
+    if current_gains >= sell_loss_percent {
         return true;
     }
-    
-    // find the latest peak
-    let mut latest_peak_index = 0;
-    let mut latest_peak_value = closes.first().unwrap();
-    for (index, value) in closes.iter().enumerate() {
-        if value > latest_peak_value {
-            latest_peak_index = index;
-            latest_peak_value = value;
-        }
+
+    // hold on if we haven't reach the gain margin
+    if current_gains <= sell_gain_percent {
+        return false;
     }
 
-    // now find the lowest value after peak
-    let mut recent_low_index = latest_peak_index;
-    let mut recent_low_value = latest_peak_value;
-    for (index, value) in closes.iter().enumerate() {
-        // skip till we're past the peak index
-        if index < recent_low_index {
-            continue;
-        }
-
-        // don't include the last index
-        if index == closes.len() - 1 {
-            continue;
-        }
-
-        if value < recent_low_value {
-            recent_low_index = index;
-            recent_low_value = value;
-        }
-    }
-
-    // have we reached the peak's low?
-    if latest_price <= *recent_low_value {
-        // check we haven't found the peak
-        if recent_low_index != latest_peak_index {
-            // also don't care if it was yeseterday
-            if closes.len() - recent_low_index > 2 {
-                return true;
-            }
-        }
-    }
-
-    return false;
+    // now wait till our profit maximises
+    return is_at_recent_low(&closes[closes.len()-10..].to_vec());
 }
 
 pub fn should_buy(closes: &Vec<f64>) -> bool {
-    let latest_price = *closes.last().unwrap();
-
     // ignore penny stocks
+    let latest_price = *closes.last().unwrap();
     if latest_price < 1.0 {
         return false;
     }
 
-    // now see if the trend is going up
-    let (gradient, r) = get_best_fit(&closes);
-    if gradient > 0.025 && r > 0.85 {
-        // todo: do we really want to limit the gradient?
-        // often an abnormal spike get's sold away quick...
-        // maybe this should be optimized for the target market
-        if gradient < 0.035 {
-            return true;
-        }
+    // stay away from dying stocks
+    let (overall_gradient, _) = get_best_fit(&closes);
+    if overall_gradient < 0.00 {
+        return false;
     }
-    
-    return false;
+
+    let recent_days = 4;
+    let length = closes.len();
+    let (old_values, new_values) = closes.split_at(length - recent_days);
+    let (old_gradient, old_r) = get_best_fit(&old_values[old_values.len()-14..].to_vec());
+    let (new_gradient, new_r) = get_best_fit(&new_values.to_vec());
+
+    // no recent decreases
+    if new_values[recent_days-1] < new_values[recent_days-2] || new_values[recent_days-2] < new_values[recent_days-3] {
+        return false;
+    }
+
+    // old change isn't too great
+    let old_change = get_percent_change(*new_values.last().unwrap(), *old_values.last().unwrap());
+    if old_change.abs() >= 1.0 {
+        return false;
+    }
+
+    // the trend is strong enough
+    if old_r.abs() < 0.83 || new_r < 0.83 {
+        return false;
+    }
+
+    // new trend is in right range
+    if new_gradient < 0.010 || new_gradient > 0.030 {
+        return false;
+    }
+
+    // old trend is in right range
+    if old_gradient > -0.010 || old_gradient < -0.030 {
+        return false;
+    }
+
+    return true;
 }
 
 pub fn get_risk_factored_amount(max_amount: f64, closes: &Vec<f64>) -> f64 {
-    // score the volatility, and reduce max amount if above threashhold
-    // if volatility too high, then don't buy
-    
+    let average_volatility = get_average_volatility(closes);
+    let inverse = 1.0 / average_volatility;
+
+    // invest less in risky stocks
+    if inverse < 0.3 {
+        return max_amount * 0.5;
+    }
+
     return max_amount;
 }

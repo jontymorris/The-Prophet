@@ -7,16 +7,16 @@ use stocks_core::dates::parse_date;
 use stocks_core::stats::*;
 
 fn main() {
-    let stocks = get_all_stocks("nz".into());
+    let stocks = get_all_stocks("us".into());
 
     let config = Config {
-        balance: 1000.0,
-        buy_amount: 200.0,
-        sell_loss_percent: 1.5,
-        sell_gain_percent: 999.0,
-        days_to_go_back: 30,
+        balance: 10000.0,
+        buy_amount: 2500.0,
+        sell_loss_percent: 15.0,
+        sell_gain_percent: 5.0,
+        days_to_go_back: 150,
         start_date: parse_date("2015-01-01".to_string()),
-        end_date: parse_date("2020-8-01".to_string()),
+        end_date: parse_date("2020-01-01".to_string()),
     };
 
     println!("Running simulation...");

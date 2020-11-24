@@ -31,6 +31,7 @@ pub struct Investment {
 pub struct Trade {
     pub symbol: String,
     pub price: f64,
+    pub quantity: f64,
     pub date: String,
     pub was_buying: bool,
 }
@@ -72,6 +73,16 @@ pub fn perform_simulation(stocks: Vec<Stock>, config: &Config) -> Portfolio {
     }
 
     progress.finish();
+
+    // now add any remaining investments back to the portfolio
+    for (symbol, investment) in portfolio.investments.iter() {
+        let stock = stocks.iter().find(|&x| x.symbol.eq(symbol)).unwrap();
+        let last_candle = stock.history.last().unwrap();
+        let amount = investment.quantity * last_candle.close;
+
+        println!("> Unable to sell {}", symbol);
+        portfolio.balance += amount;
+    }
 
     return portfolio;
 }
@@ -116,11 +127,16 @@ fn analyze_buying(
     config: &Config,
 ) {
     if should_buy(&recent_closes) {
+        // don't re-enter recent trades
+        if has_sold_recently(stock, current_date, portfolio) {
+            return;
+        }
+
         let buy_amount = get_risk_factored_amount(config.buy_amount, recent_closes);
         let last_close_price = *recent_closes.last().unwrap();
 
-        // ignore if we don't have the budget
-        if portfolio.balance < buy_amount {
+        // check we have the balance
+        if buy_amount == 0.0 || portfolio.balance < buy_amount {
             return;
         }
 
@@ -133,6 +149,7 @@ fn analyze_buying(
 
         let new_trade = Trade {
             price: last_close_price,
+            quantity: quantity,
             date: current_date.format("%Y-%m-%d").to_string(),
             symbol: stock.symbol.clone(),
             was_buying: true,
@@ -167,6 +184,7 @@ fn analyze_selling(
 
         let new_trade = Trade {
             price: latest_close,
+            quantity: investment.quantity,
             symbol: stock.symbol.clone(),
             date: date_format,
             was_buying: false,
@@ -181,4 +199,17 @@ fn analyze_selling(
 fn has_been_listed_yet(stock: &Stock, current_date: NaiveDate) -> bool {
     let listing_date = parse_date(stock.listing_date.clone());
     is_past_date(current_date, listing_date)
+}
+
+fn has_sold_recently(stock: &Stock, today: &NaiveDate, portfolio: &Portfolio) -> bool {
+    let trades: Vec<&Trade> = portfolio.trades.iter().filter(|&x| x.symbol.eq(&stock.symbol)).collect();
+
+    let last_trade = trades.last();
+    if last_trade.is_some() {
+        let trade_date = parse_date(last_trade.unwrap().date.clone());
+        let duration = *today - trade_date;
+        return duration.num_days() < 35;
+    }
+
+    return false;
 }
