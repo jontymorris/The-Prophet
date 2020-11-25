@@ -10,57 +10,50 @@ def get_trades():
         contents = handle.read()
         return json.loads(contents)
 
-def get_trades_by_symbol(trades):
-    symbols = {}
+def get_profit(trade):
+    buy_amount = trade['buy_price'] * trade['quantity']
+    sell_amount = trade['sell_price'] * trade['quantity']
 
-    for trade in trades:
-        symbol = trade['symbol']
-        if symbol in symbols:
-            symbols[symbol].append(trade)
+    return sell_amount - buy_amount
+
+def get_date(trade):
+    return datetime.strptime(trade['sell_date'], '%Y-%m-%d')
+
+def get_daily_profits(dates, profits):
+    daily_profits = {}
+    for i in range(0, len(profits)):
+        profit = profits[i]
+        date = dates[i]
+
+        if date in daily_profits:
+            daily_profits[date] += profit
         else:
-            symbols[symbol] = [trade]
+            daily_profits[date] = profit
     
-    return symbols
+    return daily_profits
 
-def get_daily_profit(symbol_trades):
-    daily_profit = {}
-
-    for symbol in symbol_trades.keys():
-        trades = symbol_trades[symbol]
-        for i in range(0, len(trades), 2):
-            if i > len(trades) - 2:
-                break
-
-            buy_price = trades[i]['price']
-            sell_price = trades[i+1]['price']
-            quantity = trades[i]['quantity']
-
-            bought = buy_price * quantity
-            sold = sell_price * quantity 
-
-            profit = sold - bought
-
-            date = trades[i+1]['date']
-            date = datetime.strptime(date, '%Y-%m-%d')
-
-            if date in daily_profit:
-                daily_profit[date] += profit
-            else:
-                daily_profit[date] = profit
+def add_consecutive_profits(profits):
+    total_profit = 0
+    for i in range(0, len(profits)):
+        total_profit += profits[i]
+        profits[i] = total_profit
     
-    return daily_profit
+    return profits
 
 trades = get_trades()
-symbols = get_trades_by_symbol(trades)
-daily_profit = get_daily_profit(symbols)
+profits = [get_profit(trade) for trade in trades]
+dates = [get_date(trade) for trade in trades]
 
-dates = list(daily_profit.keys())
+daily_profits = get_daily_profits(dates, profits)
+
+dates = list(daily_profits.keys())
 dates.sort()
 
-profits = [daily_profit[date] for date in dates]
+profits = [daily_profits[date] for date in dates]
+profits = add_consecutive_profits(profits)
 
 fig = pyplot.gcf()
 fig.set_size_inches(18.5, 10.5)
 
-pyplot.plot_date(dates, profits)
+pyplot.plot(dates, profits)
 pyplot.show()
