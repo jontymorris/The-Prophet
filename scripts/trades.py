@@ -24,56 +24,56 @@ def get_history(symbol):
 
     history = pandas.read_csv(path)
     history['Date'] = pandas.to_datetime(history['Date'])
-    #history = history[history['Date'] >= '2018-01-01']
 
     return history
 
 def get_trades():
     with open(BASE + 'trades.json') as handle:
         contents = handle.read()
-        return json.loads(contents)
+        trades = json.loads(contents)
 
-def find_trades(symbol, was_buying, all_trades):
-    found = []
-    
-    for trade in all_trades:
-        if trade['symbol'] == symbol:
-            if trade['was_buying'] == was_buying:
-                trade['date'] = datetime.strptime(trade['date'], '%Y-%m-%d')
-                found.append(trade)
-    
-    return found
+        for trade in trades:
+            trade['buy_date'] = datetime.strptime(trade['buy_date'], '%Y-%m-%d')
+            trade['sell_date'] = datetime.strptime(trade['sell_date'], '%Y-%m-%d')
 
-def empty_output_folder():
-    files = os.listdir(BASE + 'output')
+        return trades
+
+def empty_graphs_folder():
+    files = os.listdir(BASE + 'graphs')
+    
     for item in files:
-        path = os.path.join(BASE, 'output', item)
+        path = os.path.join(BASE, 'graphs', item)
         os.remove(path)
 
 
 symbols = get_symbols()
 trades = get_trades()
 
-empty_output_folder()
+empty_graphs_folder
 
 print('Generating images')
 for symbol in tqdm(symbols):
     try:
         history = get_history(symbol)
-        buys = find_trades(symbol, True, trades)
-        sells = find_trades(symbol,False, trades)
+        symbol_trades = [trade for trade in trades if trade['symbol'] == symbol]
 
-        if len(buys) == 0 and len(sells) == 0:
+        if len(symbol_trades) == 0:
             continue
 
         fig = pyplot.gcf()
         fig.set_size_inches(18.5, 10.5)
         
-        pyplot.plot(history['Date'].values, history['Close'].values, label='Price/Time')
-        pyplot.plot_date([trade['date'] for trade in buys], [trade['price'] for trade in buys], label='Buys')
-        pyplot.plot_date([trade['date'] for trade in sells], [trade['price'] for trade in sells], label='Sells')
+        buy_prices = [trade['buy_price'] for trade in symbol_trades]
+        buy_dates = [trade['buy_date'] for trade in symbol_trades]
 
-        pyplot.savefig(BASE + f'output/{symbol}.jpeg')
+        sell_prices = [trade['sell_price'] for trade in symbol_trades]
+        sell_dates = [trade['sell_date'] for trade in symbol_trades]
+
+        pyplot.plot(history['Date'].values, history['Close'].values, label='Price/Time')
+        pyplot.plot_date(buy_dates, buy_prices, label='Buys')
+        pyplot.plot_date(sell_dates, sell_prices, label='Sells')
+
+        pyplot.savefig(BASE + f'graphs/{symbol}.jpeg')
         pyplot.show()
     except:
         pass
