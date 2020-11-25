@@ -1,0 +1,17 @@
+[
+    {
+        "symbol": "BTC-USD",
+        "listing_date": "2016-01-01",
+        "history": []
+    },
+    {
+        "symbol": "ETHUSD=X",
+        "listing_date": "2016-01-01",
+        "history": []
+    },
+    {
+        "symbol": "XPRLX",
+        "listing_date": "2016-01-01",
+        "history": []
+    }
+]
