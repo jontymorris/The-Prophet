@@ -3095,11 +3095,6 @@
         "history": []
     },
     {
-        "symbol": "CLMAX",
-        "listing_date": "2016-01-01",
-        "history": []
-    },
-    {
         "symbol": "CLMCX",
         "listing_date": "2016-01-01",
         "history": []
@@ -3121,11 +3116,6 @@
     },
     {
         "symbol": "CLMVX",
-        "listing_date": "2016-01-01",
-        "history": []
-    },
-    {
-        "symbol": "CLMWX",
         "listing_date": "2016-01-01",
         "history": []
     },
