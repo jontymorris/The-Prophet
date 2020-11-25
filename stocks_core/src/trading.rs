@@ -10,7 +10,7 @@ pub fn should_sell(
     let current_gains = get_percent_change(latest_price, buy_price);
 
     // sell if we've reached the loss margin
-    if current_gains >= sell_loss_percent {
+    if current_gains <= -sell_loss_percent {
         return true;
     }
 
@@ -50,13 +50,13 @@ pub fn should_buy(closes: &Vec<f64>) -> bool {
         return false;
     }
 
-    // difference isn't too great
-    let difference = get_percent_change(*new_values.last().unwrap(), *old_values.last().unwrap());
-    if difference.abs() >= 1.0 {
+    // recent difference isn't too much
+    let recent_difference = get_percent_change(*new_values.last().unwrap(), *old_values.last().unwrap());
+    if recent_difference.abs() >= 1.0 {
         return false;
     }
 
-    // the trend is strong enough
+    // the trend correlation is strong enough
     if old_r.abs() < 0.83 || new_r < 0.83 {
         return false;
     }
@@ -66,11 +66,12 @@ pub fn should_buy(closes: &Vec<f64>) -> bool {
         return false;
     }
 
-    // old trend is in right range
-    if old_gradient > -0.010 || old_gradient < -0.030 {
+    // check the gradient difference is in right range
+    let gradient_difference = get_percent_change(new_gradient, old_gradient);
+    if gradient_difference.abs() < 30.0 && gradient_difference.abs() < 100.0 {
         return false;
     }
-
+    
     return true; // looks good to me!
 }
 
