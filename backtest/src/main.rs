@@ -12,11 +12,11 @@ fn main() {
     let config = Config {
         balance: 10000.0,
         buy_amount: 2500.0,
-        sell_loss_percent: 15.0,
+        sell_loss_percent: 7.0,
         sell_gain_percent: 5.0,
         days_to_go_back: 150,
-        start_date: parse_date("2015-01-01".to_string()),
-        end_date: parse_date("2020-01-01".to_string()),
+        start_date: parse_date("2016-03-01".to_string()),
+        end_date: parse_date("2019-03-01".to_string()),
     };
 
     println!("Running simulation...");

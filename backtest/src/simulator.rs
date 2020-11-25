@@ -61,30 +61,52 @@ pub fn perform_simulation(stocks: Vec<Stock>, config: &Config) -> Portfolio {
         progress.inc(1);
     }
 
-    // now sell the remaining investments
-    while !is_past_date(trading_date, today) && portfolio.investments.len() > 0 {
-        for stock in &stocks {
-            if portfolio.investments.contains_key(&stock.symbol) {
-                check_stock(stock, trading_date, &mut portfolio, &config);
+    progress.finish();
+
+    cleanup_portfolio(&stocks, &mut portfolio, &mut trading_date, today, interval);
+
+    return portfolio;
+}
+
+fn cleanup_portfolio(
+    stocks: &Vec<Stock>,
+    portfolio: &mut Portfolio,
+    trading_date: &mut NaiveDate,
+    final_date: NaiveDate,
+    interval: Duration,
+) {
+    // add remaining investments back to the portfolio at last market price
+    for (symbol, investment) in portfolio.investments.iter() {
+        let stock = stocks.iter().find(|&x| x.symbol.eq(symbol)).unwrap();
+
+        // try to find the last price for this stock
+        let mut closes = stock.history.iter().map(|x| x.close).collect();
+        while !is_past_date(*trading_date, final_date) {
+            match get_recent_closes(stock, *trading_date, 3) {
+                Some(values) => {
+                    closes = values;
+                    break;
+                }
+                None => {
+                    *trading_date += interval;
+                }
             }
         }
 
-        trading_date += interval;
-    }
+        let last_price = *closes.last().unwrap();
+        let amount = investment.quantity * last_price;
 
-    progress.finish();
+        let new_trade = Trade {
+            date: trading_date.format("%Y-%m-%d").to_string(),
+            price: last_price,
+            quantity: investment.quantity,
+            symbol: symbol.clone(),
+            was_buying: false,
+        };
 
-    // now add any remaining investments back to the portfolio
-    for (symbol, investment) in portfolio.investments.iter() {
-        let stock = stocks.iter().find(|&x| x.symbol.eq(symbol)).unwrap();
-        let last_candle = stock.history.last().unwrap();
-        let amount = investment.quantity * last_candle.close;
-
-        println!("> Unable to sell {}", symbol);
         portfolio.balance += amount;
+        portfolio.trades.push(new_trade);
     }
-
-    return portfolio;
 }
 
 fn check_stock(stock: &Stock, current_date: NaiveDate, portfolio: &mut Portfolio, config: &Config) {
