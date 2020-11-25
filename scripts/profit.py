@@ -40,6 +40,23 @@ def add_consecutive_profits(profits):
     
     return profits
 
+def get_drawdown(profits):
+    total_losses = 0
+    total_profit = profits[-1]
+
+    for i in range(1, len(profits), 2):
+        try:
+            profit1 = profits[i]
+            profit2 = profits[i+1]
+
+            difference = profit2 - profit1
+            if difference < 0:
+                total_losses += abs(difference)
+        except:
+            pass
+    
+    return total_losses / total_profit * 100
+
 trades = get_trades()
 profits = [get_profit(trade) for trade in trades]
 dates = [get_date(trade) for trade in trades]
@@ -52,8 +69,13 @@ dates.sort()
 profits = [daily_profits[date] for date in dates]
 profits = add_consecutive_profits(profits)
 
+drawdown = get_drawdown(profits)
+
 fig = pyplot.gcf()
 fig.set_size_inches(18.5, 10.5)
+
+axs = pyplot.gca()
+axs.set_title(f'{round(drawdown, 2)}% drawdown')
 
 pyplot.plot(dates, profits)
 pyplot.show()
