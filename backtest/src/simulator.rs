@@ -30,10 +30,11 @@ pub struct Investment {
 #[derive(Serialize)]
 pub struct Trade {
     pub symbol: String,
-    pub price: f64,
+    pub buy_price: f64,
+    pub buy_date: String,
+    pub sell_price: f64,
+    pub sell_date: String,
     pub quantity: f64,
-    pub date: String,
-    pub was_buying: bool,
 }
 
 pub fn perform_simulation(stocks: Vec<Stock>, config: &Config) -> Portfolio {
@@ -93,19 +94,21 @@ fn cleanup_portfolio(
             }
         }
 
+        // update portfolio balance
         let last_price = *closes.last().unwrap();
         let amount = investment.quantity * last_price;
-
-        let new_trade = Trade {
-            date: trading_date.format("%Y-%m-%d").to_string(),
-            price: last_price,
-            quantity: investment.quantity,
-            symbol: symbol.clone(),
-            was_buying: false,
-        };
-
         portfolio.balance += amount;
-        portfolio.trades.push(new_trade);
+
+        // update trade sell fields
+        let mut last_trade = portfolio
+            .trades
+            .iter_mut()
+            .rev()
+            .find(|x| x.symbol.eq(&stock.symbol))
+            .unwrap();
+
+        last_trade.sell_price = last_price;
+        last_trade.sell_date = trading_date.format("%Y-%m-%d").to_string();
     }
 }
 
@@ -164,19 +167,22 @@ fn analyze_buying(
 
         let quantity = (buy_amount * 0.995) / last_close_price;
 
+        // create new trade and investment
         let new_investment = Investment {
             price: last_close_price,
             quantity: quantity,
         };
 
         let new_trade = Trade {
-            price: last_close_price,
-            quantity: quantity,
-            date: current_date.format("%Y-%m-%d").to_string(),
             symbol: stock.symbol.clone(),
-            was_buying: true,
+            buy_price: last_close_price,
+            buy_date: current_date.format("%Y-%m-%d").to_string(),
+            sell_price: 0.0,
+            sell_date: "".to_string(),
+            quantity: quantity,
         };
 
+        // update portfolio with new items
         portfolio.balance -= buy_amount;
         portfolio.trades.push(new_trade);
         portfolio
@@ -194,7 +200,6 @@ fn analyze_selling(
 ) {
     let investment = &portfolio.investments[&stock.symbol];
     let latest_close = *recent_closes.last().unwrap();
-    let date_format = current_date.format("%Y-%m-%d").to_string();
 
     if should_sell(
         &recent_closes,
@@ -203,16 +208,14 @@ fn analyze_selling(
         config.sell_gain_percent,
     ) {
         let new_amount = latest_close * investment.quantity;
+        let date_format = current_date.format("%Y-%m-%d").to_string();
 
-        let new_trade = Trade {
-            price: latest_close,
-            quantity: investment.quantity,
-            symbol: stock.symbol.clone(),
-            date: date_format,
-            was_buying: false,
-        };
+        // update trade sell fields
+        let mut last_trade = get_last_trade(stock.symbol.clone(), portfolio).unwrap();
+        last_trade.sell_price = latest_close;
+        last_trade.sell_date = date_format;
 
-        portfolio.trades.push(new_trade);
+        // update investments and balance
         portfolio.balance += new_amount * 0.995;
         portfolio.investments.remove_entry(&stock.symbol).unwrap();
     }
@@ -223,16 +226,19 @@ fn has_been_listed_yet(stock: &Stock, current_date: NaiveDate) -> bool {
     is_past_date(current_date, listing_date)
 }
 
-fn has_sold_recently(stock: &Stock, today: &NaiveDate, portfolio: &Portfolio) -> bool {
-    let trades: Vec<&Trade> = portfolio
+fn get_last_trade(symbol: String, portfolio: &mut Portfolio) -> Option<&mut Trade> {
+    return portfolio
         .trades
-        .iter()
-        .filter(|&x| x.symbol.eq(&stock.symbol))
-        .collect();
+        .iter_mut()
+        .rev()
+        .find(|x| x.symbol.eq(&symbol));
+}
 
-    let last_trade = trades.last();
+fn has_sold_recently(stock: &Stock, today: &NaiveDate, portfolio: &mut Portfolio) -> bool {
+    let last_trade = get_last_trade(stock.symbol.clone(), portfolio);
+
     if last_trade.is_some() {
-        let trade_date = parse_date(last_trade.unwrap().date.clone());
+        let trade_date = parse_date(last_trade.unwrap().sell_date.clone());
         let duration = *today - trade_date;
         return duration.num_days() < 35;
     }
