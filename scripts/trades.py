@@ -73,6 +73,9 @@ for symbol in tqdm(symbols):
         pyplot.plot_date(buy_dates, buy_prices, label='Buys')
         pyplot.plot_date(sell_dates, sell_prices, label='Sells')
 
+        axs = pyplot.gca()
+        axs.set_title(symbol)
+
         pyplot.savefig(BASE + f'graphs/{symbol}.jpeg')
         pyplot.show()
     except:
